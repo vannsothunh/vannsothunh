@@ -67,7 +67,7 @@ body {
 }
 
 .container {
-  width: min(1100px, 92%);
+  width: min(1000px, 90%);
   margin: 0 auto;
 }
 
@@ -421,6 +421,7 @@ body {
   padding: 2rem 0;
   margin-top: 3rem;
   background: var(--elev);
+
 }
 
 .footer-grid {
@@ -428,6 +429,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  
 }
 
 /* =========================
@@ -505,5 +507,43 @@ body {
 @media (max-width: 560px) {
   .projects-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   App Landing Page Specifics (Added for Infinity Downloader)
+   ========================= */
+
+.download-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.btn.big {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* សម្រាប់ icon ក្នុងប៊ូតុង */
+.btn.big svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Responsive សម្រាប់ទំព័រ App */
+@media (max-width: 600px) {
+  .download-group {
+    flex-direction: column;
+  }
+  .btn.big {
+    width: 100%;
+    justify-content: center;
   }
 }
