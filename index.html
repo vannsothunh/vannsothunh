@@ -11,10 +11,8 @@
   <script defer src="script.js"></script>
 </head>
 <body>
-  <!-- Skip link for accessibility -->
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Header / Navbar -->
   <header class="site-header" id="top">
     <nav class="nav container">
       <a href="index.html" class="brand" aria-label="Homepage">
@@ -42,7 +40,6 @@
   </header>
 
   <main id="main">
-    <!-- Hero -->
     <section class="hero container">
       <div class="hero-grid">
         <div class="hero-text">
@@ -64,7 +61,6 @@
       </div>
     </section>
 
-    <!-- About -->
     <section id="about" class="section container">
       <h2 class="section-title">About</h2>
       <div class="about-grid">
@@ -79,7 +75,6 @@
       </div>
     </section>
 
-    <!-- Skills -->
     <section id="skills" class="section container">
       <h2 class="section-title">Skills</h2>
       <ul class="chip-list" role="list">
@@ -95,11 +90,25 @@
       </ul>
     </section>
 
-    <!-- Projects -->
     <section id="projects" class="section container">
       <h2 class="section-title">Selected Projects</h2>
 
       <div class="projects-grid">
+        <article class="card" data-animate>
+            <img src="assets/Image/infinity-cover.png" alt="Infinity Downloader App" loading="lazy" width="600" height="360">
+            <div class="card-body">
+              <h3>Infinity Downloader</h3>
+              <p>កម្មវិធី Download វីដេអូ និងចម្រៀងកម្រិត 4K ពីគ្រប់ Platform។ ប្រើបានទាំង Windows & Mac.</p>
+              <div class="tags">
+                <span>Python</span><span>CustomTkinter</span><span>FFmpeg</span>
+              </div>
+              <div class="card-actions">
+                <a class="btn primary small" href="infinity-downloader.html">Get App</a>
+                <a class="btn small" href="#">GitHub</a>
+              </div>
+            </div>
+        </article>
+
         <article class="card" data-animate>
           <img src="assets/Image/Desktop Screenshot 2025.11.24 - 10.36.31.94.png" alt="Screenshot of Project One" loading="lazy" width="600" height="360">
           <div class="card-body">
@@ -147,7 +156,6 @@
       </div>
     </section>
 
-    <!-- Experience -->
     <section id="experience" class="section container">
       <h2 class="section-title">Experience</h2>
       <ol class="timeline" role="list">
@@ -168,7 +176,6 @@
       </ol>
     </section>
 
-    <!-- Contact -->
     <section id="contact" class="section container">
       <h2 class="section-title">Contact</h2>
       <div class="contact-card">
