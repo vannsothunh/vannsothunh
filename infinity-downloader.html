@@ -3,10 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Infinity Downloader - Free Video Downloader</title>
+  <title>Infinity Downloader v2.0 - Free Video Downloader</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
+  <style>
+      /* បន្ថែម CSS បន្តិចដើម្បីឱ្យប៊ូតុង Mac នៅក្បែរគ្នា */
+      .mac-options {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: center;
+      }
+      .btn small {
+          display: block;
+          font-size: 0.7em;
+          opacity: 0.8;
+          font-weight: normal;
+      }
+  </style>
 </head>
 <body>
 
@@ -22,25 +37,40 @@
 
   <main>
     <section class="section container" style="text-align: center; padding-top: 4rem;">
-        <h1 class="headline">Infinity <span class="accent">Downloader</span></h1>
+        <h1 class="headline">Infinity <span class="accent">Downloader</span> <span style="font-size: 0.5em; vertical-align: super; background: #007bff; color: white; padding: 2px 8px; border-radius: 10px;">v2.0</span></h1>
         <p class="subtitle" style="max-width: 600px; margin: 0 auto 2rem;">
             កម្មវិធីទាញយកវីដេអូដែលមានល្បឿនលឿន ងាយស្រួលប្រើ និងឥតគិតថ្លៃ។ 
             Support កម្រិតច្បាស់រហូតដល់ 4K និងអាចបំប្លែងទៅជា MP3 បានភ្លាមៗ។
         </p>
 
-        <div class="download-group">
+        <div class="download-group" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+            
             <a href="downloads/InfinityDownloader-Setup.zip" download class="btn primary big">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.551L24 0v11.023h-13.051V1.898zm-10.949 9.95L9.75 12v9.313L0 19.95v-8.102zm10.949 0.424L24 24V12.424h-13.051v10.575z"/></svg>
                 Download for Windows
             </a>
             
-            <a href="downloads/InfinityDownloader-Mac.dmg" download class="btn big">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.55-.83.99-1.93.9-2.96-.9.09-1.96.67-2.6 1.55-.57.75-.98 1.95-.88 2.95 1 .07 1.99-.67 2.58-1.54z"/></svg>
-                Download for macOS
-            </a>
+            <div class="mac-options">
+                <a href="downloads/Infinity Downloader-AppleSilicon.zip" download class="btn big">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.55-.83.99-1.93.9-2.96-.9.09-1.96.67-2.6 1.55-.57.75-.98 1.95-.88 2.95 1 .07 1.99-.67 2.58-1.54z"/></svg>
+                    <div>
+                        macOS <small>(Apple Silicon/M-Series)</small>
+                    </div>
+                </a>
+
+                <a href="downloads/Infinity Downloader-Intel.zip" download class="btn big">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.55-.83.99-1.93.9-2.96-.9.09-1.96.67-2.6 1.55-.57.75-.98 1.95-.88 2.95 1 .07 1.99-.67 2.58-1.54z"/></svg>
+                    <div>
+                        macOS <small>(Intel Chip)</small>
+                    </div>
+                </a>
+            </div>
+
         </div>
         
-        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--muted);">Version 1.0.0 | Free & Open Source</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--muted);">
+            <strong>Version 2.0.0</strong> | Major Update | Free & Open Source
+        </p>
     </section>
 
     <section class="section container">
@@ -53,8 +83,8 @@
         <h2 class="section-title">Why use Infinity Downloader?</h2>
         <div class="projects-grid"> 
             <div class="card card-body">
-                <h3>🚀 Fast Download</h3>
-                <p>ប្រើប្រាស់បច្ចេកវិទ្យា Multithreading ធ្វើឱ្យការទាញយកលឿនបំផុត។</p>
+                <h3>🚀 Fast Download (New Engine)</h3>
+                <p>ប្រើប្រាស់បច្ចេកវិទ្យា Multithreading ថ្មី ល្បឿនលឿនជាងមុន x2។</p>
             </div>
             <div class="card card-body">
                 <h3>📺 4K Support</h3>
@@ -74,14 +104,19 @@
                 <div class="time">Step 1</div>
                 <div class="content">
                     <h3>Download the Installer</h3>
-                    <p>ចុចប៊ូតុង Download ខាងលើតាមប្រភេទកុំព្យូទ័ររបស់អ្នក (Windows ឬ Mac)។</p>
+                    <p>
+                        ជ្រើសរើស Version ឱ្យត្រូវនឹងកុំព្យូទ័ររបស់អ្នក៖<br>
+                        - <strong>Windows:</strong> សម្រាប់កុំព្យូទ័រទូទៅ។<br>
+                        - <strong>Apple Silicon:</strong> សម្រាប់ Mac M1, M2, M3។<br>
+                        - <strong>Intel Chip:</strong> សម្រាប់ Mac ស៊េរីចាស់។
+                    </p>
                 </div>
             </li>
             <li>
                 <div class="time">Step 2</div>
                 <div class="content">
                     <h3>Run the Setup</h3>
-                    <p>បើក File ដែលបាន Download រួចចុច Install (ប្រសិនបើមានការសួរពី Antivirus សូមចុច "Run Anyway" ព្រោះ App នេះមិនទាន់មាន Certificate)។</p>
+                    <p>បើក File ដែលបាន Download រួចចុច Install (ប្រសិនបើមានការសួរពី Antivirus សូមចុច "Run Anyway")។</p>
                 </div>
             </li>
             <li>
