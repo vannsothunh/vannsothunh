@@ -1,206 +1,520 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Responsive personal portfolio website" />
-  <title>VannSoThunh — Portfolio</title>
+  <title>VannSoThunh</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="styles.css" as="style">
-  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    /* ── Theme base ───────────────────────────────── */
+    [data-theme="dark"]  { background:#0b0c10; color:#e6e6e6; }
+    [data-theme="light"] { background:#f8fafc;  color:#0f172a; }
+
+    /* ── Theme icon toggle ────────────────────────── */
+    [data-theme="light"] .icon-sun  { display:block !important; }
+    [data-theme="light"] .icon-moon { display:none  !important; }
+    [data-theme="dark"]  .icon-sun  { display:none  !important; }
+    [data-theme="dark"]  .icon-moon { display:block !important; }
+
+    /* ── Skip link ────────────────────────────────── */
+    .skip-link { position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden; }
+    .skip-link:focus { position:static;width:auto;height:auto; }
+
+    /* ── Header ───────────────────────────────────── */
+    [data-theme="dark"]  .site-header { background:rgba(11,12,16,.88); border-bottom:1px solid #1e2130; }
+    [data-theme="light"] .site-header { background:rgba(248,250,252,.9); border-bottom:1px solid #e2e8f0; }
+
+    /* ── Nav links ────────────────────────────────── */
+    .nav-link {
+      display:inline-flex; align-items:center; gap:0.35rem;
+      position:relative; font-size:0.85rem; font-weight:500;
+      padding:0.4rem 0.65rem; border-radius:0.65rem;
+      will-change:color,background;
+      transition: color 160ms cubic-bezier(.4,0,.2,1),
+                  background 160ms cubic-bezier(.4,0,.2,1);
+    }
+    .nav-link svg { transition: transform 200ms cubic-bezier(.34,1.56,.64,1); }
+    .nav-link:hover svg { transform: translateY(-2px) scale(1.15); }
+
+    /* active pill underline */
+    .nav-link::after {
+      content:''; position:absolute; bottom:2px; left:50%; right:50%;
+      height:2px; border-radius:9999px; opacity:0;
+      will-change:left,right,opacity;
+      transition: left 220ms cubic-bezier(.4,0,.2,1),
+                  right 220ms cubic-bezier(.4,0,.2,1),
+                  opacity 220ms;
+    }
+    [data-theme="dark"]  .nav-link::after { background:#6ee7b7; }
+    [data-theme="light"] .nav-link::after { background:#0ea5e9; }
+    .nav-link.active::after { left:8px; right:8px; opacity:1; }
+    [data-theme="dark"]  .nav-link:hover, [data-theme="dark"]  .nav-link.active { color:#6ee7b7 !important; background:rgba(110,231,183,.08); }
+    [data-theme="light"] .nav-link:hover, [data-theme="light"] .nav-link.active { color:#0369a1 !important; background:rgba(14,165,233,.08); }
+
+    /* Mobile nav */
+    @media (max-width:900px) {
+      #nav-menu:not(.open) { display:none !important; }
+      #nav-menu.open {
+        display:flex !important; flex-direction:column;
+        position:absolute; right:4%; top:62px;
+        min-width:230px; border-radius:1rem; padding:0.5rem; z-index:100;
+        animation: menuSlide 220ms cubic-bezier(.4,0,.2,1) both;
+        will-change:transform,opacity;
+      }
+      [data-theme="dark"]  #nav-menu.open { background:#0f1117; border:1px solid #1e2130; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+      [data-theme="light"] #nav-menu.open { background:#fff; border:1px solid #e2e8f0; box-shadow:0 8px 32px rgba(0,0,0,.1); }
+      .nav-toggle { display:inline-flex !important; }
+      .nav-link { font-size:0.9rem; width:100%; }
+    }
+    @keyframes menuSlide {
+      from { opacity:0; transform:translateY(-8px) scale(.97); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    /* ── BUTTONS ── shared base ───────────────────── */
+    .btn-pri, .btn-sec, .btn-ghost {
+      position:relative; overflow:hidden;
+      display:inline-flex; align-items:center; justify-content:center; gap:0.45rem;
+      border-radius:0.75rem; font-weight:600; font-size:0.875rem;
+      cursor:pointer; text-decoration:none; border:none;
+      will-change:transform,box-shadow;
+      transition:
+        transform    220ms cubic-bezier(.34,1.56,.64,1),
+        box-shadow   220ms cubic-bezier(.4,0,.2,1),
+        background   220ms cubic-bezier(.4,0,.2,1),
+        border-color 220ms cubic-bezier(.4,0,.2,1),
+        color        180ms cubic-bezier(.4,0,.2,1);
+    }
+    /* icon nudge on hover */
+    .btn-pri svg, .btn-sec svg, .btn-ghost svg {
+      transition: transform 220ms cubic-bezier(.34,1.56,.64,1);
+    }
+    .btn-pri:hover svg { transform: scale(1.15) rotate(-5deg); }
+    .btn-sec:hover svg { transform: translateX(2px) scale(1.12); }
+    .btn-ghost:hover svg { transform: translateY(-2px) scale(1.12); }
+
+    /* shimmer sweep */
+    .btn-pri::before, .btn-sec::before, .btn-ghost::before {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);
+      transform:translateX(-120%);
+      transition:transform 520ms cubic-bezier(.4,0,.2,1);
+      pointer-events:none;
+    }
+    .btn-pri:hover::before, .btn-sec:hover::before, .btn-ghost:hover::before { transform:translateX(120%); }
+
+    /* ripple on click */
+    .btn-pri::after, .btn-sec::after, .btn-ghost::after {
+      content:''; position:absolute;
+      width:100px; height:100px; border-radius:50%;
+      background:rgba(255,255,255,.15);
+      top:50%; left:50%;
+      transform:translate(-50%,-50%) scale(0);
+      opacity:0; pointer-events:none;
+    }
+    .btn-pri:active::after, .btn-sec:active::after, .btn-ghost:active::after {
+      animation: ripple 400ms cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes ripple {
+      to { transform:translate(-50%,-50%) scale(3.5); opacity:0; }
+    }
+
+    /* ── btn-primary (accent filled) ─────────────── */
+    [data-theme="dark"]  .btn-pri {
+      background:linear-gradient(135deg,#6ee7b7 0%,#34d399 60%,#10b981 100%);
+      border:1.5px solid rgba(110,231,183,.5); color:#022c1f;
+      box-shadow:0 2px 8px rgba(110,231,183,.2), inset 0 1px 0 rgba(255,255,255,.2);
+    }
+    [data-theme="light"] .btn-pri {
+      background:linear-gradient(135deg,#38bdf8 0%,#0ea5e9 60%,#0284c7 100%);
+      border:1.5px solid rgba(14,165,233,.4); color:#fff;
+      box-shadow:0 2px 8px rgba(14,165,233,.25), inset 0 1px 0 rgba(255,255,255,.3);
+    }
+    [data-theme="dark"]  .btn-pri:hover {
+      background:linear-gradient(135deg,#a7f3d0 0%,#6ee7b7 60%,#34d399 100%);
+      border-color:rgba(167,243,208,.7);
+      transform:translateY(-3px) scale(1.03);
+      box-shadow:0 0 24px 6px rgba(110,231,183,.4), 0 8px 24px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.25);
+    }
+    [data-theme="light"] .btn-pri:hover {
+      background:linear-gradient(135deg,#7dd3fc 0%,#38bdf8 60%,#0ea5e9 100%);
+      border-color:rgba(125,211,252,.7);
+      transform:translateY(-3px) scale(1.03);
+      box-shadow:0 0 24px 6px rgba(14,165,233,.35), 0 8px 24px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.3);
+    }
+    .btn-pri:active { transform:translateY(0) scale(.97); }
+
+    /* ── btn-secondary (outlined) ─────────────────── */
+    [data-theme="dark"]  .btn-sec {
+      background:rgba(255,255,255,.04); border:1.5px solid #2a2d3a; color:#c8cad6;
+      box-shadow:0 1px 4px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    [data-theme="light"] .btn-sec {
+      background:#fff; border:1.5px solid #cbd5e1; color:#475569;
+      box-shadow:0 1px 4px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    [data-theme="dark"]  .btn-sec:hover {
+      background:rgba(110,231,183,.07); border-color:#6ee7b7; color:#6ee7b7;
+      transform:translateY(-3px) scale(1.03);
+      box-shadow:0 0 14px 3px rgba(110,231,183,.18), 0 8px 24px rgba(0,0,0,.35);
+    }
+    [data-theme="light"] .btn-sec:hover {
+      background:#f0f9ff; border-color:#0ea5e9; color:#0369a1;
+      transform:translateY(-3px) scale(1.03);
+      box-shadow:0 0 14px 3px rgba(14,165,233,.2), 0 8px 24px rgba(0,0,0,.07);
+    }
+    .btn-sec:active { transform:translateY(0) scale(.97); }
+
+    /* ── btn-ghost (text + icon, subtle) ─────────── */
+    [data-theme="dark"]  .btn-ghost { background:transparent; border:1.5px solid #2a2d3a; color:#9ca3af; }
+    [data-theme="light"] .btn-ghost { background:transparent; border:1.5px solid #e2e8f0; color:#64748b; }
+    [data-theme="dark"]  .btn-ghost:hover { background:rgba(255,255,255,.05); border-color:#4b5563; color:#e6e6e6; transform:translateY(-2px); box-shadow:0 4px 16px rgba(0,0,0,.3); }
+    [data-theme="light"] .btn-ghost:hover { background:#f8fafc; border-color:#94a3b8; color:#1e293b; transform:translateY(-2px); box-shadow:0 4px 16px rgba(0,0,0,.07); }
+    .btn-ghost:active { transform:translateY(0) scale(.97); }
+
+    /* ── Theme toggle button ──────────────────────── */
+    .theme-btn {
+      position:relative; overflow:hidden;
+      will-change:transform;
+      transition: background 200ms, border-color 200ms,
+                  transform 280ms cubic-bezier(.34,1.56,.64,1),
+                  box-shadow 200ms;
+    }
+    [data-theme="dark"]  .theme-btn { background:#0f1117; border:1.5px solid #2a2d3a; color:#e6e6e6; border-radius:.75rem; }
+    [data-theme="light"] .theme-btn { background:#fff; border:1.5px solid #e2e8f0; color:#0f172a; border-radius:.75rem; }
+    [data-theme="dark"]  .theme-btn:hover { background:#1a1f2e; border-color:#6ee7b7; transform:rotate(20deg) scale(1.12); box-shadow:0 0 14px 3px rgba(110,231,183,.25); }
+    [data-theme="light"] .theme-btn:hover { background:#f0f9ff; border-color:#0ea5e9; transform:rotate(20deg) scale(1.12); box-shadow:0 0 14px 3px rgba(14,165,233,.25); }
+
+    /* ── Chip hover ───────────────────────────────── */
+    [data-theme="dark"]  .chip { background:#0f1117; border:1.5px solid #2a2d3a; color:#9ca3af; transition:background 160ms,border-color 160ms,color 160ms,transform 180ms cubic-bezier(.34,1.56,.64,1); cursor:default; }
+    [data-theme="light"] .chip { background:#f1f5f9; border:1.5px solid #e2e8f0; color:#64748b; transition:background 160ms,border-color 160ms,color 160ms,transform 180ms cubic-bezier(.34,1.56,.64,1); cursor:default; }
+    [data-theme="dark"]  .chip:hover { background:#1a1f2e; border-color:#6ee7b7; color:#6ee7b7; transform:translateY(-2px) scale(1.05); }
+    [data-theme="light"] .chip:hover { background:#e0f2fe; border-color:#0ea5e9; color:#0369a1; transform:translateY(-2px) scale(1.05); }
+
+    /* ── Card hover ───────────────────────────────── */
+    [data-theme="dark"]  .card { background:#0f1117; border:1.5px solid #1e2130; will-change:transform,box-shadow; transition:transform 240ms cubic-bezier(.34,1.56,.64,1),box-shadow 240ms cubic-bezier(.4,0,.2,1),border-color 240ms; }
+    [data-theme="light"] .card { background:#fff; border:1.5px solid #e2e8f0; will-change:transform,box-shadow; transition:transform 240ms cubic-bezier(.34,1.56,.64,1),box-shadow 240ms cubic-bezier(.4,0,.2,1),border-color 240ms; }
+    [data-theme="dark"]  .card:hover { transform:translateY(-5px) scale(1.015); border-color:rgba(110,231,183,.3); box-shadow:0 0 24px 4px rgba(110,231,183,.1),0 16px 40px rgba(0,0,0,.5); }
+    [data-theme="light"] .card:hover { transform:translateY(-5px) scale(1.015); border-color:rgba(14,165,233,.3); box-shadow:0 0 24px 4px rgba(14,165,233,.1),0 16px 40px rgba(0,0,0,.1); }
+
+    /* ── Social links ─────────────────────────────── */
+    [data-theme="dark"]  .social-link { color:#93c5fd; text-decoration:none; transition:color 160ms,letter-spacing 160ms; }
+    [data-theme="light"] .social-link { color:#2563eb; text-decoration:none; transition:color 160ms,letter-spacing 160ms; }
+    [data-theme="dark"]  .social-link:hover { color:#6ee7b7; letter-spacing:.03em; }
+    [data-theme="light"] .social-link:hover { color:#0ea5e9; letter-spacing:.03em; }
+
+    /* ── Other helpers ────────────────────────────── */
+    .headline      { font-size:clamp(2rem,6vw,3.2rem); }
+    .section-title { font-size:clamp(1.6rem,2.5vw,2rem); }
+    [data-animate] { will-change:opacity,transform; transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.4,0,.2,1); }
+    [data-theme="dark"]  .muted { color:#6b7280; }
+    [data-theme="light"] .muted { color:#64748b; }
+    [data-theme="dark"]  .accent { color:#6ee7b7; }
+    [data-theme="light"] .accent { color:#0ea5e9; }
+    [data-theme="dark"]  .brand { color:#f1f5f9; }
+    [data-theme="light"] .brand { color:#0f172a; }
+    [data-theme="dark"]  .site-footer { background:#080a0f; border-top:1px solid #1e2130; }
+    [data-theme="light"] .site-footer { background:#f1f5f9; border-top:1px solid #e2e8f0; }
+    [data-theme="dark"]  .contact-card { background:#0f1117; border:1.5px solid #1e2130; }
+    [data-theme="light"] .contact-card { background:#fff; border:1.5px solid #e2e8f0; }
+    [data-theme="dark"]  .form-input { background:#080a0f; border:1.5px solid #2a2d3a; color:#e6e6e6; }
+    [data-theme="light"] .form-input { background:#f8fafc; border:1.5px solid #e2e8f0; color:#0f172a; }
+    .form-input:focus { outline:2px solid rgba(110,231,183,.45); outline-offset:2px; }
+    [data-theme="light"] .form-input:focus { outline-color:rgba(14,165,233,.45); }
+    [data-theme="dark"]  .timeline { border-color:#1e2130; }
+    [data-theme="light"] .timeline { border-color:#e2e8f0; }
+    [data-theme="dark"]  .timeline li::before { background:#6ee7b7; box-shadow:0 0 0 4px rgba(110,231,183,.2); }
+    [data-theme="light"] .timeline li::before { background:#0ea5e9; box-shadow:0 0 0 4px rgba(14,165,233,.2); }
+    [data-theme="dark"]  .hero-photo { background:radial-gradient(120% 120% at 80% 0%,rgba(110,231,183,.22),#0f1117); border:1.5px solid #1e2130; }
+    [data-theme="light"] .hero-photo { background:radial-gradient(120% 120% at 80% 0%,rgba(14,165,233,.14),#fff); border:1.5px solid #e2e8f0; }
+    .timeline { border-left:2px dashed; }
+    .timeline li::before { content:''; width:.8rem; height:.8rem; border-radius:50%; position:absolute; left:-.45rem; top:1.5rem; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .nav-toggle { display:none; }
+  </style>
   <script defer src="script.js"></script>
 </head>
-<body>
+<body class="font-sans leading-relaxed antialiased" style="margin:0;padding:0;">
+
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header" id="top">
-    <nav class="nav container">
-      <a href="index.html" class="brand" aria-label="Homepage">
+  <!-- HEADER -->
+  <header class="site-header sticky top-0 z-50 backdrop-blur-md" id="top">
+    <nav style="width:min(1060px,92%);margin:0 auto;" class="flex items-center justify-between gap-4 py-3">
+
+      <a href="index.html" class="brand inline-flex items-center gap-2 font-bold no-underline transition-opacity hover:opacity-80" aria-label="Homepage">
         <img src="assets/logo.svg" alt="" width="28" height="28" />
         <span>VannSoThunh</span>
       </a>
 
-      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
-        <span class="sr-only">Menu</span>
-        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <!-- Mobile hamburger -->
+      <button class="nav-toggle items-center justify-center p-2 rounded-xl cursor-pointer theme-btn"
+              aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
       </button>
 
-      <ul id="nav-menu" class="nav-menu">
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><g stroke-linecap="round" stroke-width="2"><path d="M12 1v3"/><path d="M12 20v3"/><path d="M4.22 4.22l2.12 2.12"/><path d="M17.66 17.66l2.12 2.12"/><path d="M1 12h3"/><path d="M20 12h3"/><path d="M4.22 19.78l2.12-2.12"/><path d="M17.66 6.34l2.12-2.12"/></g></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010 9.79z"/></svg>
-        </button></li>
+      <ul id="nav-menu" class="flex gap-1 list-none m-0 p-0 items-center">
+        <li><a href="#about" data-section="about" class="nav-link no-underline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          About</a></li>
+        <li><a href="#skills" data-section="skills" class="nav-link no-underline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Skills</a></li>
+        <li><a href="#projects" data-section="projects" class="nav-link no-underline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Projects</a></li>
+        <li><a href="#experience" data-section="experience" class="nav-link no-underline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          Experience</a></li>
+        <li><a href="#contact" data-section="contact" class="nav-link no-underline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Contact</a></li>
+        <li style="margin-left:.25rem;">
+          <button id="themeToggle" class="theme-btn p-2 grid place-items-center cursor-pointer" aria-label="Toggle dark mode">
+            <!-- Sun -->
+            <svg class="icon-sun" style="width:18px;height:18px;fill:currentColor;display:none;" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <g stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none">
+                <path d="M12 1v3"/><path d="M12 20v3"/><path d="M4.22 4.22l2.12 2.12"/>
+                <path d="M17.66 17.66l2.12 2.12"/><path d="M1 12h3"/><path d="M20 12h3"/>
+                <path d="M4.22 19.78l2.12-2.12"/><path d="M17.66 6.34l2.12-2.12"/>
+              </g>
+            </svg>
+            <!-- Moon -->
+            <svg class="icon-moon" style="width:18px;height:18px;fill:currentColor;display:block;" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010 9.79z"/>
+            </svg>
+          </button>
+        </li>
       </ul>
     </nav>
   </header>
 
+  <!-- MAIN -->
   <main id="main">
-    <section class="hero container">
-      <div class="hero-grid">
-        <div class="hero-text">
-          <h1 class="headline">Hi, I’m <span class="accent">VannSoThunh</span> 👋</h1>
-          <p class="subtitle">I build clean, accessible, and fast web experiences. Currently open to new opportunities.</p>
-          <div class="cta">
-            <a class="btn primary" href="#projects">View Projects</a>
-            <a class="btn" href="assets/Your-Name-CV.pdf" download>Download CV</a>
+
+    <!-- HERO -->
+    <section style="width:min(1060px,92%);margin:0 auto;padding-top:3.5rem;padding-bottom:2rem;">
+      <div style="display:grid;grid-template-columns:1.2fr 0.9fr;gap:2.5rem;align-items:center;" class="max-[900px]:!grid-cols-1">
+        <div>
+          <h1 class="headline font-bold leading-tight m-0 mb-4" style="letter-spacing:-0.02em;">
+            Hi, I'm <span class="accent">VannSoThunh</span>
+            <span style="display:inline-block;vertical-align:middle;margin-left:0.2em;">
+              <svg width="0.85em" height="0.85em" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:inline-block;vertical-align:-.1em;">
+                <path d="M6.5 9V5a1.5 1.5 0 0 1 3 0v4" stroke="#FBBF24" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M9.5 8V3.5a1.5 1.5 0 0 1 3 0V8" stroke="#FBBF24" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M12.5 8V5a1.5 1.5 0 0 1 3 0v4" stroke="#FBBF24" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M15.5 9V6.5a1.5 1.5 0 0 1 3 0V12a7 7 0 0 1-7 7h-1A6.5 6.5 0 0 1 4 12.5v-2a1.5 1.5 0 0 1 2.5-1.12V9" stroke="#FBBF24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 4.5L3.5 6" stroke="#FBBF24" stroke-width="1.4" stroke-linecap="round" opacity=".6"/>
+                <path d="M1.5 8H3" stroke="#FBBF24" stroke-width="1.4" stroke-linecap="round" opacity=".6"/>
+              </svg>
+            </span>
+          </h1>
+          <p class="muted m-0 mb-6" style="font-size:1.05rem;line-height:1.7;">
+            I build clean, accessible, and fast web experiences.<br>Currently open to new opportunities.
+          </p>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <!-- View Projects -->
+            <a class="btn-pri px-5 py-2.5" href="#projects">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              View Projects
+            </a>
+            <!-- Download CV -->
+            <a class="btn-sec px-5 py-2.5" href="assets/Your-Name-CV.pdf" download>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV
+            </a>
           </div>
-          <ul class="socials" aria-label="Social links">
-            <li><a href="https://github.com/vannsothunh" target="_blank" rel="noopener">GitHub</a></li>
-            <li><a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">LinkedIn</a></li>
-            <li><a href="vannsothunh@gmail.com">Email</a></li>
+          <ul class="flex gap-4 list-none p-0 m-0" aria-label="Social links">
+            <li><a href="https://github.com/vannsothunh" target="_blank" rel="noopener" class="social-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:inline;vertical-align:-.15em;margin-right:.3rem;"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              GitHub</a></li>
+            <li><a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener" class="social-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:inline;vertical-align:-.15em;margin-right:.3rem;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn</a></li>
+            <li><a href="mailto:vannsothunh@gmail.com" class="social-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-.15em;margin-right:.3rem;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              Email</a></li>
           </ul>
         </div>
-        <div class="hero-photo">
-          <img src="assets/Profile.JPG" alt="Illustration portrait of Your Name" width="480" height="480" loading="lazy">
+
+        <div class="hero-photo rounded-3xl p-3 grid place-items-center shadow-[0_16px_48px_rgba(0,0,0,0.3)]" style="aspect-ratio:1/1;">
+          <img src="assets/Profile.JPG" alt="Portrait of VannSoThunh" width="480" height="480" loading="lazy" style="width:100%;height:auto;display:block;border-radius:18px;">
         </div>
       </div>
     </section>
 
-    <section id="about" class="section container">
-      <h2 class="section-title">About</h2>
-      <div class="about-grid">
-        <p>
-          I’m a front‑end developer with a passion for delightful UX and maintainable code.
-          I design in the browser, sweat the details, and love shipping polished products.
-        </p>
-        <p>
-          Outside of work you’ll catch me exploring new UI patterns, writing on my blog,
-          and contributing to open‑source.
-        </p>
+    <!-- ABOUT -->
+    <section id="about" style="width:min(1060px,92%);margin:0 auto;" class="py-16">
+      <h2 class="section-title font-bold m-0 mb-5">About</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="max-[600px]:!grid-cols-1">
+        <p class="m-0 leading-relaxed">I'm a front‑end developer with a passion for delightful UX and maintainable code. I design in the browser, sweat the details, and love shipping polished products.</p>
+        <p class="m-0 leading-relaxed">Outside of work you'll catch me exploring new UI patterns, writing on my blog, and contributing to open‑source.</p>
       </div>
     </section>
 
-    <section id="skills" class="section container">
-      <h2 class="section-title">Skills</h2>
-      <ul class="chip-list" role="list">
-        <li class="chip">HTML5</li>
-        <li class="chip">CSS3 / Sass</li>
-        <li class="chip">JavaScript (ES6+)</li>
-        <li class="chip">React</li>
-        <li class="chip">Node.js</li>
-        <li class="chip">TypeScript</li>
-        <li class="chip">Git & GitHub</li>
-        <li class="chip">Accessibility (a11y)</li>
-        <li class="chip">Performance</li>
+    <!-- SKILLS -->
+    <section id="skills" style="width:min(1060px,92%);margin:0 auto;" class="py-16">
+      <h2 class="section-title font-bold m-0 mb-6">Skills</h2>
+      <ul class="flex flex-wrap gap-2.5 p-0 m-0" role="list">
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">HTML5</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">CSS3 / Sass</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">JavaScript (ES6+)</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">React</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">Node.js</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">TypeScript</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">Git & GitHub</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">Accessibility (a11y)</li>
+        <li class="chip list-none px-3.5 py-1.5 rounded-full text-sm font-medium">Performance</li>
       </ul>
     </section>
 
-    <section id="projects" class="section container">
-      <h2 class="section-title">Selected Projects</h2>
+    <!-- PROJECTS -->
+    <section id="projects" style="width:min(1060px,92%);margin:0 auto;" class="py-16">
+      <h2 class="section-title font-bold m-0 mb-6">Selected Projects</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" class="max-[900px]:!grid-cols-2 max-[560px]:!grid-cols-1">
 
-      <div class="projects-grid">
-        <article class="card" data-animate>
-            <img src="assets/Image/infinity-cover.png" alt="Infinity Downloader App" loading="lazy" width="600" height="360">
-            <div class="card-body">
-              <h3>Infinity Downloader</h3>
-              <p>កម្មវិធី Download វីដេអូ និងចម្រៀងកម្រិត 4K ពីគ្រប់ Platform។ ប្រើបានទាំង Windows & Mac.</p>
-              <div class="tags">
-                <span>Python</span><span>CustomTkinter</span><span>FFmpeg</span>
-              </div>
-              <div class="card-actions">
-                <a class="btn primary small" href="infinity-downloader.html">Get App</a>
-                <a class="btn small" href="https://github.com/vannsothunh/InfinityDownloader/releases">GitHub</a>
-              </div>
+        <article class="card rounded-2xl overflow-hidden flex flex-col" data-animate>
+          <img src="assets/Image/infinity-cover.png" alt="Infinity Downloader App" loading="lazy" width="600" height="360" style="width:100%;height:auto;display:block;">
+          <div class="p-4 grid gap-2.5" style="flex:1;">
+            <h3 class="m-0 font-semibold">Infinity Downloader</h3>
+            <p class="m-0 text-sm muted">កម្មវិធី Download វីដេអូ និងចម្រៀងកម្រិត 4K ពីគ្រប់ Platform។ ប្រើបានទាំង Windows & Mac.</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="muted text-xs">Python</span><span class="muted text-xs">·</span>
+              <span class="muted text-xs">CustomTkinter</span><span class="muted text-xs">·</span>
+              <span class="muted text-xs">FFmpeg</span>
             </div>
-        </article>
-
-        <article class="card" data-animate>
-          <img src="assets/Image/Desktop Screenshot 2025.11.24 - 10.36.31.94.png" alt="Screenshot of Project One" loading="lazy" width="600" height="360">
-          <div class="card-body">
-            <h3>Project One</h3>
-            <p>A minimal note‑taking app with offline support and drag‑and‑drop.</p>
-            <div class="tags">
-              <span>React</span><span>PWA</span><span>IndexedDB</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn small" href="#" aria-label="Live demo of Project One">Live</a>
-              <a class="btn small" href="#" aria-label="Source code of Project One on GitHub">Code</a>
+            <div class="flex gap-2 mt-1">
+              <a class="btn-pri px-3 py-1.5 text-xs" href="infinity-downloader.html">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Get App</a>
+              <a class="btn-ghost px-3 py-1.5 text-xs" href="https://github.com/vannsothunh/InfinityDownloader/releases" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub</a>
             </div>
           </div>
         </article>
 
-        <article class="card" data-animate>
-          <img src="assets/Image/Desktop Screenshot 2025.11.24 - 10.41.01.15.png" alt="Screenshot of Project Two" loading="lazy" width="600" height="360">
-          <div class="card-body">
-            <h3>Project Two</h3>
-            <p>Responsive ecommerce layout with accessible filters and cart.</p>
-            <div class="tags">
-              <span>HTML</span><span>CSS Grid</span><span>Vanilla JS</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn small" href="#">Live</a>
-              <a class="btn small" href="#">Code</a>
+        <article class="card rounded-2xl overflow-hidden flex flex-col" data-animate>
+          <img src="assets/Image/" alt="Screenshot of Project One" loading="lazy" width="600" height="360" style="width:100%;height:auto;display:block;">
+          <div class="p-4 grid gap-2.5" style="flex:1;">
+            <h3 class="m-0 font-semibold">Project One</h3>
+            <p class="m-0 text-sm muted">A minimal note‑taking app with offline support and drag‑and‑drop.</p>
+            <div class="flex flex-wrap gap-1.5"><span class="muted text-xs">React</span><span class="muted text-xs">·</span><span class="muted text-xs">PWA</span><span class="muted text-xs">·</span><span class="muted text-xs">IndexedDB</span></div>
+            <div class="flex gap-2 mt-1">
+              <a class="btn-pri px-3 py-1.5 text-xs" href="#" aria-label="Live demo">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Live</a>
+              <a class="btn-ghost px-3 py-1.5 text-xs" href="#" aria-label="Source code">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Code</a>
             </div>
           </div>
         </article>
 
-        <article class="card" data-animate>
-          <img src="assets/Image/Desktop Screenshot 2025.11.24 - 10.46.32.38.png" alt="Screenshot of Project Three" loading="lazy" width="600" height="360">
-          <div class="card-body">
-            <h3>Project Three</h3>
-            <p>Data dashboard with charts, keyboard navigation, and theming.</p>
-            <div class="tags">
-              <span>TypeScript</span><span>ARIA</span><span>Charts</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn small" href="#">Live</a>
-              <a class="btn small" href="#">Code</a>
+        <article class="card rounded-2xl overflow-hidden flex flex-col" data-animate>
+          <img src="assets/Image/" alt="Screenshot of Project Two" loading="lazy" width="600" height="360" style="width:100%;height:auto;display:block;">
+          <div class="p-4 grid gap-2.5" style="flex:1;">
+            <h3 class="m-0 font-semibold">Project Two</h3>
+            <p class="m-0 text-sm muted">Responsive ecommerce layout with accessible filters and cart.</p>
+            <div class="flex flex-wrap gap-1.5"><span class="muted text-xs">HTML</span><span class="muted text-xs">·</span><span class="muted text-xs">CSS Grid</span><span class="muted text-xs">·</span><span class="muted text-xs">Vanilla JS</span></div>
+            <div class="flex gap-2 mt-1">
+              <a class="btn-pri px-3 py-1.5 text-xs" href="#">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Live</a>
+              <a class="btn-ghost px-3 py-1.5 text-xs" href="#">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Code</a>
             </div>
           </div>
         </article>
+
+        <article class="card rounded-2xl overflow-hidden flex flex-col" data-animate>
+          <img src="assets/Image/" alt="Screenshot of Project Three" loading="lazy" width="600" height="360" style="width:100%;height:auto;display:block;">
+          <div class="p-4 grid gap-2.5" style="flex:1;">
+            <h3 class="m-0 font-semibold">Project Three</h3>
+            <p class="m-0 text-sm muted">Data dashboard with charts, keyboard navigation, and theming.</p>
+            <div class="flex flex-wrap gap-1.5"><span class="muted text-xs">TypeScript</span><span class="muted text-xs">·</span><span class="muted text-xs">ARIA</span><span class="muted text-xs">·</span><span class="muted text-xs">Charts</span></div>
+            <div class="flex gap-2 mt-1">
+              <a class="btn-pri px-3 py-1.5 text-xs" href="#">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Live</a>
+              <a class="btn-ghost px-3 py-1.5 text-xs" href="#">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Code</a>
+            </div>
+          </div>
+        </article>
+
       </div>
     </section>
 
-    <section id="experience" class="section container">
-      <h2 class="section-title">Experience</h2>
-      <ol class="timeline" role="list">
-        <li>
-          <div class="time">2023 — Present</div>
-          <div class="content">
-            <h3>Front‑End Engineer • Awesome Co.</h3>
-            <p>Built component library, improved Lighthouse scores from 71 → 96.</p>
+    <!-- EXPERIENCE -->
+    <section id="experience" style="width:min(1060px,92%);margin:0 auto;" class="py-16">
+      <h2 class="section-title font-bold m-0 mb-6">Experience</h2>
+      <ol class="timeline list-none m-0 p-0" role="list">
+        <li style="display:grid;grid-template-columns:10ch 1fr;gap:1rem;padding:1rem 0 1rem 1.25rem;position:relative;">
+          <div class="muted text-sm" style="font-variant-numeric:tabular-nums;padding-top:.15rem;">2023 — Now</div>
+          <div>
+            <h3 class="m-0 mb-1 font-semibold">Front‑End Engineer • Awesome Co.</h3>
+            <p class="m-0 text-sm muted">Built component library, improved Lighthouse scores from 71 → 96.</p>
           </div>
         </li>
-        <li>
-          <div class="time">2021 — 2023</div>
-          <div class="content">
-            <h3>Web Developer • Startup XYZ</h3>
-            <p>Shipped 12 features, introduced automated testing and CI.</p>
+        <li style="display:grid;grid-template-columns:10ch 1fr;gap:1rem;padding:1rem 0 1rem 1.25rem;position:relative;">
+          <div class="muted text-sm" style="font-variant-numeric:tabular-nums;padding-top:.15rem;">2021 — 2023</div>
+          <div>
+            <h3 class="m-0 mb-1 font-semibold">Web Developer • Startup XYZ</h3>
+            <p class="m-0 text-sm muted">Shipped 12 features, introduced automated testing and CI.</p>
           </div>
         </li>
       </ol>
     </section>
 
-    <section id="contact" class="section container">
-      <h2 class="section-title">Contact</h2>
-      <div class="contact-card">
-        <p>Have a project in mind? Let’s talk!</p>
-        <form class="contact-form" action="mailto:hello@example.com" method="post" enctype="text/plain">
-          <label for="name">Name</label>
-          <input id="name" name="name" type="text" required placeholder="Your name" />
+    <!-- CONTACT -->
+    <section id="contact" style="width:min(1060px,92%);margin:0 auto;" class="py-16">
+      <h2 class="section-title font-bold m-0 mb-6">Contact</h2>
+      <div class="contact-card rounded-2xl p-6 grid gap-4">
+        <p class="m-0">Have a project in mind? Let's talk!</p>
+        <form class="grid gap-3" action="mailto:hello@example.com" method="post" enctype="text/plain">
+          <label class="text-sm font-medium" for="name">Name</label>
+          <input id="name" name="name" type="text" required placeholder="Your name"
+                 class="form-input w-full px-3.5 py-2.5 rounded-xl" style="font-size:1rem;" />
 
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required placeholder="you@example.com" />
+          <label class="text-sm font-medium" for="email">Email</label>
+          <input id="email" name="email" type="email" required placeholder="you@example.com"
+                 class="form-input w-full px-3.5 py-2.5 rounded-xl" style="font-size:1rem;" />
 
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required placeholder="Tell me about your project..."></textarea>
+          <label class="text-sm font-medium" for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Tell me about your project..."
+                    class="form-input w-full px-3.5 py-2.5 rounded-xl resize-y" style="font-size:1rem;"></textarea>
 
-          <button class="btn primary" type="submit">Send</button>
+          <!-- Send button -->
+          <button type="submit" class="btn-pri px-6 py-2.5" style="width:fit-content;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          </button>
         </form>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <p>© <span id="year"></span> VannSoThunh. All rights reserved.</p>
-      <a class="btn small" href="index.html">Back to top ↑</a>
+  <!-- FOOTER -->
+  <footer class="site-footer py-8 mt-8">
+    <div style="width:min(1060px,92%);margin:0 auto;" class="flex items-center justify-between gap-4 flex-wrap">
+      <p class="muted m-0 text-sm">© <span id="year"></span> VannSoThunh. All rights reserved.</p>
+      <!-- Back to top -->
+      <a class="btn-sec px-4 py-2" href="#top">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+        Back to Top
+      </a>
     </div>
   </footer>
+
 </body>
 </html>
